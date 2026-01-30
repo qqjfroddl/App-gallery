@@ -5,7 +5,7 @@ interface SidebarProps {
   categories: string[];
   onAddCategory: (name: string) => void;
   onDeleteCategory: (name: string) => void;
-  onAddProject: (name: string, url: string, category: string) => void;
+  onAddProject: (name: string, url: string, categories: string[]) => void;
   getCategoryStyles: (cat: string) => any;
 }
 
@@ -19,25 +19,28 @@ const Sidebar: React.FC<SidebarProps> = ({
   const [nameInput, setNameInput] = useState('');
   const [urlInput, setUrlInput] = useState('');
   const [newCategoryInput, setNewCategoryInput] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState<string>('');
+  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
 
+  // 초기 카테고리 로드 시 첫 번째 선택 방지 혹은 유지 (사용자가 직접 선택 유도)
   useEffect(() => {
-    if (categories.length > 0 && !selectedCategory) {
-      setSelectedCategory(categories[0]);
-    } else if (categories.length === 0) {
-      setSelectedCategory('');
-    } else if (!categories.includes(selectedCategory)) {
-      setSelectedCategory(categories[0]);
-    }
-  }, [categories, selectedCategory]);
+    // 유효하지 않은 카테고리 제거
+    setSelectedCategories(prev => prev.filter(c => categories.includes(c)));
+  }, [categories]);
+
+  const toggleCategorySelection = (cat: string) => {
+    setSelectedCategories(prev => 
+      prev.includes(cat) ? prev.filter(c => c !== cat) : [...prev, cat]
+    );
+  };
 
   const handleAddProject = () => {
-    if (urlInput.trim() && selectedCategory) {
-      onAddProject(nameInput, urlInput, selectedCategory);
+    if (urlInput.trim() && selectedCategories.length > 0) {
+      onAddProject(nameInput, urlInput, selectedCategories);
       setUrlInput('');
       setNameInput('');
-    } else if (!selectedCategory) {
-      alert('카테고리를 선택해주세요.');
+      setSelectedCategories([]);
+    } else if (selectedCategories.length === 0) {
+      alert('최소 하나 이상의 카테고리를 선택해주세요.');
     } else if (!urlInput.trim()) {
       alert('URL을 입력해주세요.');
     }
@@ -64,7 +67,7 @@ const Sidebar: React.FC<SidebarProps> = ({
         <div className="glass rounded-2xl p-6 border border-white/5 shadow-xl">
           <h3 className="text-lg font-bold mb-2 text-white">빠른 추가</h3>
           <p className="text-gray-400 text-sm mb-6 leading-relaxed">
-            웹사이트의 이름과 URL을 입력하여 프로젝트를 관리하세요.
+            웹사이트의 이름과 URL을 입력하여 프로젝트를 관리하세요. (다중 카테고리 선택 가능)
           </p>
           <div className="space-y-4">
             <div>
@@ -99,16 +102,17 @@ const Sidebar: React.FC<SidebarProps> = ({
             </div>
 
             <div>
-              <label className="block text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-1.5 ml-1">카테고리 선택</label>
+              <label className="block text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-1.5 ml-1">카테고리 선택 (중복 가능)</label>
               <div className="flex flex-wrap gap-2 max-h-48 overflow-y-auto pr-1 custom-scroll">
                 {categories.map((cat) => {
                   const styles = getCategoryStyles(cat);
+                  const isSelected = selectedCategories.includes(cat);
                   return (
                     <button
                       key={cat}
-                      onClick={() => setSelectedCategory(cat)}
+                      onClick={() => toggleCategorySelection(cat)}
                       className={`px-3 py-2 rounded-lg text-[11px] font-bold transition-all border ${
-                        selectedCategory === cat
+                        isSelected
                           ? `${styles.active.replace('bg-', 'bg-')}/20 ${styles.border.replace('border-', 'border-')} ${styles.text} shadow-sm`
                           : 'bg-white/5 border-white/10 text-gray-400 hover:border-white/20 hover:text-gray-200'
                       }`}
@@ -122,9 +126,9 @@ const Sidebar: React.FC<SidebarProps> = ({
 
             <button
               onClick={handleAddProject}
-              disabled={!urlInput.trim() || !selectedCategory}
+              disabled={!urlInput.trim() || selectedCategories.length === 0}
               className={`w-full font-bold py-3 px-4 rounded-xl flex items-center justify-center gap-2 transition-all active:scale-[0.98] shadow-lg mt-2 ${
-                !urlInput.trim() || !selectedCategory
+                !urlInput.trim() || selectedCategories.length === 0
                   ? 'bg-gray-800 text-gray-500 cursor-not-allowed'
                   : 'bg-point-blue hover:bg-point-blue/90 text-white shadow-point-blue/20'
               }`}

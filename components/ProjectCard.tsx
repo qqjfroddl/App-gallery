@@ -1,16 +1,14 @@
 
 import React, { useState } from 'react';
 import { Project } from '../types';
+import { getCategoryStyles } from '../App';
 
 interface ProjectCardProps {
   project: Project;
   isAdmin?: boolean;
   onDelete?: (id: string) => void;
   onEdit?: () => void;
-  categoryColorStyles?: {
-    badge: string;
-    border: string;
-  };
+  allCategories: string[]; // 색상 스타일링을 위해 전체 카테고리 목록 필요
 }
 
 const ProjectCard: React.FC<ProjectCardProps> = ({ 
@@ -18,11 +16,10 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
   isAdmin, 
   onDelete, 
   onEdit,
-  categoryColorStyles 
+  allCategories
 }) => {
   const [imageError, setImageError] = useState(false);
 
-  // 삭제 클릭 핸들러
   const handleDelete = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
@@ -31,7 +28,6 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
     }
   };
 
-  // 수정 클릭 핸들러
   const handleEdit = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
@@ -43,10 +39,8 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
   return (
     <div className="group glass-card glass rounded-2xl overflow-hidden transition-all duration-500 flex flex-col border border-white/5 relative h-full hover:translate-y-[-8px] shadow-2xl">
       
-      {/* [관리자 전용] 도구 영역 */}
       {isAdmin && (
         <div className="absolute top-3 right-3 z-50 flex gap-2 opacity-0 group-hover:opacity-100 transition-all">
-          {/* 수정 버튼 */}
           <button 
             type="button"
             onClick={handleEdit}
@@ -57,7 +51,6 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
             </svg>
           </button>
-          {/* 삭제 버튼 */}
           <button 
             type="button"
             onClick={handleDelete}
@@ -71,11 +64,10 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
         </div>
       )}
 
-      {/* 썸네일 영역 */}
       <div className="relative aspect-[16/10] overflow-hidden bg-[#080808]">
         {!imageError ? (
           <img
-            key={project.imageUrl} // 이미지 변경 시 리렌더링 강제
+            key={project.imageUrl}
             src={project.imageUrl}
             alt={project.name}
             onError={() => setImageError(true)}
@@ -87,18 +79,21 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
           </div>
         )}
         
-        {/* 오버레이 */}
         <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent opacity-80 group-hover:opacity-95 transition-opacity duration-300"></div>
         
-        {/* 카테고리 배지 - 고유 색상 적용 */}
-        <div className="absolute bottom-3 left-4">
-          <span className={`text-[8px] text-white font-black ${categoryColorStyles?.badge || 'bg-point-blue/80'} backdrop-blur-xl px-2.5 py-1 rounded-md border ${categoryColorStyles?.border || 'border-white/10'} tracking-widest uppercase shadow-xl`}>
-            {project.category}
-          </span>
+        {/* 다중 카테고리 배지 표시 */}
+        <div className="absolute bottom-3 left-4 flex flex-wrap gap-1.5 pr-4">
+          {project.categories.map((cat) => {
+            const styles = getCategoryStyles(allCategories, cat);
+            return (
+              <span key={cat} className={`text-[8px] text-white font-black ${styles.badge} backdrop-blur-xl px-2 py-0.5 rounded-md border ${styles.border} tracking-widest uppercase shadow-xl`}>
+                {cat}
+              </span>
+            );
+          })}
         </div>
       </div>
 
-      {/* 텍스트 정보 영역 */}
       <div className="p-5 flex flex-col justify-between flex-1 gap-5 bg-[#080808]">
         <div className="min-w-0">
           <h3 className="text-2xl font-black text-white group-hover:text-point-blue transition-colors truncate tracking-tighter mb-1.5 leading-none">

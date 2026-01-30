@@ -25,7 +25,7 @@ const INITIAL_PROJECTS: Project[] = [
     id: '1',
     name: 'TaskFlow',
     url: 'https://taskflow.io',
-    category: DEFAULT_CATEGORIES.SIDE_PROJECT,
+    categories: [DEFAULT_CATEGORIES.SIDE_PROJECT],
     imageUrl: 'https://s0.wp.com/mshots/v1/https%3A%2F%2Ftaskflow.io?w=800',
     addedAt: new Date('2024-01-10'),
   },
@@ -33,7 +33,7 @@ const INITIAL_PROJECTS: Project[] = [
     id: '2',
     name: 'CryptoDash',
     url: 'https://cryptodash.example.com',
-    category: DEFAULT_CATEGORIES.SIDE_PROJECT,
+    categories: [DEFAULT_CATEGORIES.SIDE_PROJECT, DEFAULT_CATEGORIES.LABS],
     imageUrl: 'https://s0.wp.com/mshots/v1/https%3A%2F%2Fcryptodash.example.com?w=800',
     addedAt: new Date('2024-02-15'),
   },
@@ -41,7 +41,7 @@ const INITIAL_PROJECTS: Project[] = [
     id: '3',
     name: 'DevTools Pro',
     url: 'https://devtools-pro.web.app',
-    category: DEFAULT_CATEGORIES.CLIENT_WORK,
+    categories: [DEFAULT_CATEGORIES.CLIENT_WORK],
     imageUrl: 'https://s0.wp.com/mshots/v1/https%3A%2F%2Fdevtools-pro.web.app?w=800',
     addedAt: new Date('2024-03-05'),
   },
@@ -49,7 +49,7 @@ const INITIAL_PROJECTS: Project[] = [
     id: '4',
     name: 'Analytica',
     url: 'https://analytica-insight.com',
-    category: DEFAULT_CATEGORIES.LABS,
+    categories: [DEFAULT_CATEGORIES.LABS],
     imageUrl: 'https://s0.wp.com/mshots/v1/https%3A%2F%2Fanalytica-insight.com?w=800',
     addedAt: new Date('2024-03-20'),
   },
@@ -83,14 +83,14 @@ const App: React.FC = () => {
 
   const filteredProjects = useMemo(() => {
     return projects.filter((project) => {
-      const matchesCategory = activeCategory === DEFAULT_CATEGORIES.ALL || project.category === activeCategory;
+      const matchesCategory = activeCategory === DEFAULT_CATEGORIES.ALL || project.categories.includes(activeCategory);
       const matchesSearch = project.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
                           project.url.toLowerCase().includes(searchQuery.toLowerCase());
       return matchesCategory && matchesSearch;
     });
   }, [projects, activeCategory, searchQuery]);
 
-  const handleAddProject = useCallback((name: string, url: string, category: string) => {
+  const handleAddProject = useCallback((name: string, url: string, selectedCategories: string[]) => {
     const formattedUrl = url.startsWith('http') ? url : `https://${url}`;
     const screenshotUrl = `https://s0.wp.com/mshots/v1/${encodeURIComponent(formattedUrl)}?w=800`;
     
@@ -98,7 +98,7 @@ const App: React.FC = () => {
       id: Date.now().toString(),
       name: name || formattedUrl.replace('https://', '').replace('http://', '').split(/[./]/)[0], 
       url: formattedUrl,
-      category: category,
+      categories: selectedCategories,
       imageUrl: screenshotUrl,
       addedAt: new Date(),
     };
@@ -140,6 +140,14 @@ const App: React.FC = () => {
       setActiveCategory(DEFAULT_CATEGORIES.ALL);
     }
   }, [activeCategory]);
+
+  const toggleEditCategory = (cat: string) => {
+    if (!editTarget) return;
+    const newCats = editTarget.categories.includes(cat)
+      ? editTarget.categories.filter(c => c !== cat)
+      : [...editTarget.categories, cat];
+    setEditTarget({ ...editTarget, categories: newCats });
+  };
 
   return (
     <div className="min-h-screen flex flex-col font-sans bg-[#050505] text-white selection:bg-point-blue/30 selection:text-white">
@@ -212,7 +220,7 @@ const App: React.FC = () => {
                       isAdmin={isAdmin}
                       onDelete={handleDeleteRequest}
                       onEdit={() => setEditTarget(project)}
-                      categoryColorStyles={getCategoryStyles(categories, project.category)}
+                      allCategories={categories}
                     />
                   ))
                 ) : (
@@ -262,16 +270,17 @@ const App: React.FC = () => {
                 />
               </div>
               <div>
-                <label className="block text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-2 ml-1">Category</label>
+                <label className="block text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-2 ml-1">Categories (다중 선택)</label>
                 <div className="flex flex-wrap gap-2">
                   {categories.map((cat) => {
                     const styles = getCategoryStyles(categories, cat);
+                    const isSelected = editTarget.categories.includes(cat);
                     return (
                       <button
                         key={cat}
-                        onClick={() => setEditTarget({...editTarget, category: cat})}
+                        onClick={() => toggleEditCategory(cat)}
                         className={`px-4 py-2 rounded-xl text-xs font-bold transition-all border ${
-                          editTarget.category === cat
+                          isSelected
                             ? `${styles.active} text-white ${styles.border} shadow-lg`
                             : 'bg-white/5 border-white/10 text-gray-500'
                         }`}
@@ -292,7 +301,12 @@ const App: React.FC = () => {
               </button>
               <button 
                 onClick={() => handleUpdateProject(editTarget)}
-                className="flex-1 py-5 rounded-2xl bg-point-blue hover:bg-point-blue/90 text-white transition-all font-black text-xs uppercase shadow-2xl shadow-point-blue/40"
+                disabled={editTarget.categories.length === 0}
+                className={`flex-1 py-5 rounded-2xl transition-all font-black text-xs uppercase shadow-2xl ${
+                  editTarget.categories.length === 0 
+                  ? 'bg-gray-800 text-gray-600 cursor-not-allowed shadow-none' 
+                  : 'bg-point-blue hover:bg-point-blue/90 text-white shadow-point-blue/40'
+                }`}
               >
                 Save Changes
               </button>

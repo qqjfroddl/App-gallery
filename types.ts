@@ -10,7 +10,7 @@ export interface Project {
   id: string;
   name: string;
   url: string;
-  category: string; // 동적 카테고리 지원을 위해 string으로 변경
+  categories: string[]; // 다중 카테고리 지원을 위해 배열로 변경
   imageUrl: string;
   description?: string;
   addedAt: Date;
