@@ -1,14 +1,13 @@
-
 <!DOCTYPE html>
 <html lang="ko">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>프로젝트 갤러리</title>
+    <title>Gallery.IO | 프로젝트 대시보드</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
     <script>
-      // 테일윈드 설정 유지
+      // 테일윈드 테마 설정
       tailwind.config = {
         darkMode: 'class',
         theme: {
@@ -22,6 +21,9 @@
             fontFamily: {
               sans: ['Inter', 'Noto Sans KR', 'sans-serif'],
             },
+            animation: {
+              'spin-slow': 'spin 8s linear infinite',
+            }
           }
         }
       }
@@ -30,7 +32,9 @@
       body {
         background-color: #050505;
         color: white;
+        overflow-x: hidden;
       }
+      /* 글래스모피즘 효과 */
       .glass {
         background: rgba(255, 255, 255, 0.03);
         backdrop-filter: blur(12px);
@@ -40,21 +44,36 @@
       .glass-card:hover {
         background: rgba(255, 255, 255, 0.06);
         border: 1px solid rgba(255, 255, 255, 0.15);
-        box-shadow: 0 0 20px rgba(59, 130, 246, 0.1);
+        box-shadow: 0 0 40px rgba(59, 130, 246, 0.1);
       }
+      /* 스크롤바 커스텀 */
       ::-webkit-scrollbar {
         width: 8px;
       }
       ::-webkit-scrollbar-track {
-        background: #0a0a0a;
+        background: #050505;
       }
       ::-webkit-scrollbar-thumb {
-        background: #333;
+        background: #222;
         border-radius: 10px;
       }
-      .custom-scroll {
-        scrollbar-width: thin;
-        scrollbar-color: #333 transparent;
+      ::-webkit-scrollbar-thumb:hover {
+        background: #333;
+      }
+      .no-scrollbar::-webkit-scrollbar {
+        display: none;
+      }
+      /* 애니메이션 지원 */
+      .animate-in {
+        animation-duration: 0.5s;
+        animation-fill-mode: both;
+      }
+      @keyframes slideInFromRight {
+        from { transform: translateX(30px); opacity: 0; }
+        to { transform: translateX(0); opacity: 1; }
+      }
+      .slide-in-from-right {
+        animation-name: slideInFromRight;
       }
     </style>
   <script type="importmap">
@@ -71,7 +90,6 @@
 </head>
   <body>
     <div id="root"></div>
-    <!-- 앱 실행을 위한 모듈 스크립트 추가 -->
     <script type="module" src="./index.tsx"></script>
   </body>
 </html>

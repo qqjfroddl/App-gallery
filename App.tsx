@@ -1,5 +1,5 @@
 
-import React, { useState, useMemo, useCallback } from 'react';
+import React, { useState, useMemo, useCallback, useEffect } from 'react';
 import { DEFAULT_CATEGORIES, Project } from './types';
 import Header from './components/Header';
 import Sidebar from './components/Sidebar';
@@ -37,31 +37,43 @@ const INITIAL_PROJECTS: Project[] = [
     imageUrl: 'https://s0.wp.com/mshots/v1/https%3A%2F%2Fcryptodash.example.com?w=800',
     addedAt: new Date('2024-02-15'),
   },
-  {
-    id: '3',
-    name: 'DevTools Pro',
-    url: 'https://devtools-pro.web.app',
-    categories: [DEFAULT_CATEGORIES.CLIENT_WORK],
-    imageUrl: 'https://s0.wp.com/mshots/v1/https%3A%2F%2Fdevtools-pro.web.app?w=800',
-    addedAt: new Date('2024-03-05'),
-  },
-  {
-    id: '4',
-    name: 'Analytica',
-    url: 'https://analytica-insight.com',
-    categories: [DEFAULT_CATEGORIES.LABS],
-    imageUrl: 'https://s0.wp.com/mshots/v1/https%3A%2F%2Fanalytica-insight.com?w=800',
-    addedAt: new Date('2024-03-20'),
-  },
 ];
 
+const STORAGE_KEYS = {
+  PROJECTS: 'gallery_projects_v1.2',
+  CATEGORIES: 'gallery_categories_v1.2',
+};
+
 const App: React.FC = () => {
-  const [projects, setProjects] = useState<Project[]>(INITIAL_PROJECTS);
-  const [categories, setCategories] = useState<string[]>([
-    DEFAULT_CATEGORIES.SIDE_PROJECT,
-    DEFAULT_CATEGORIES.CLIENT_WORK,
-    DEFAULT_CATEGORIES.LABS,
-  ]);
+  // 로컬 스토리지에서 초기 데이터 로드 (함수형 초기화 사용하여 초기 렌더링 최적화)
+  const [projects, setProjects] = useState<Project[]>(() => {
+    const saved = localStorage.getItem(STORAGE_KEYS.PROJECTS);
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        // Date 객체 복원
+        return parsed.map((p: any) => ({ ...p, addedAt: new Date(p.addedAt) }));
+      } catch (e) {
+        console.error('Failed to parse projects from storage', e);
+        return INITIAL_PROJECTS;
+      }
+    }
+    return INITIAL_PROJECTS;
+  });
+
+  const [categories, setCategories] = useState<string[]>(() => {
+    const saved = localStorage.getItem(STORAGE_KEYS.CATEGORIES);
+    if (saved) {
+      try {
+        return JSON.parse(saved);
+      } catch (e) {
+        console.error('Failed to parse categories from storage', e);
+        return [DEFAULT_CATEGORIES.SIDE_PROJECT, DEFAULT_CATEGORIES.CLIENT_WORK, DEFAULT_CATEGORIES.LABS];
+      }
+    }
+    return [DEFAULT_CATEGORIES.SIDE_PROJECT, DEFAULT_CATEGORIES.CLIENT_WORK, DEFAULT_CATEGORIES.LABS];
+  });
+
   const [activeCategory, setActiveCategory] = useState<string>(DEFAULT_CATEGORIES.ALL);
   const [searchQuery, setSearchQuery] = useState('');
   const [isAdmin, setIsAdmin] = useState(false);
@@ -70,6 +82,15 @@ const App: React.FC = () => {
   
   const [deleteTargetId, setDeleteTargetId] = useState<string | null>(null);
   const [editTarget, setEditTarget] = useState<Project | null>(null);
+
+  // 데이터 변경 시 로컬 스토리지에 저장 (Side Effects)
+  useEffect(() => {
+    localStorage.setItem(STORAGE_KEYS.PROJECTS, JSON.stringify(projects));
+  }, [projects]);
+
+  useEffect(() => {
+    localStorage.setItem(STORAGE_KEYS.CATEGORIES, JSON.stringify(categories));
+  }, [categories]);
 
   const handleAdminAuth = () => {
     if (passwordInput === '2026') {
@@ -135,6 +156,12 @@ const App: React.FC = () => {
   }, [categories]);
 
   const handleDeleteCategory = useCallback((name: string) => {
+    // 해당 카테고리를 가진 프로젝트들에서 해당 카테고리 제거 로직 (선택사항)
+    setProjects(prev => prev.map(p => ({
+      ...p,
+      categories: p.categories.filter(c => c !== name)
+    })));
+    
     setCategories((prev) => prev.filter((c) => c !== name));
     if (activeCategory === name) {
       setActiveCategory(DEFAULT_CATEGORIES.ALL);
@@ -175,7 +202,7 @@ const App: React.FC = () => {
                 )}
               </div>
               <p className="text-gray-600 text-xl font-medium max-w-2xl leading-relaxed">
-                {isAdmin ? '관리자 모드입니다. 프로젝트 수정, 삭제 및 새로운 앱 등록이 가능합니다.' : '다양한 웹 애플리케이션 프로젝트를 한눈에 관리하는 대시보드입니다.'}
+                {isAdmin ? '관리자 모드입니다. 프로젝트 수정, 삭제 및 새로운 앱 등록이 가능하며 변경사항은 브라우저에 저장됩니다.' : '다양한 웹 애플리케이션 프로젝트를 한눈에 관리하는 대시보드입니다.'}
               </p>
             </div>
             
