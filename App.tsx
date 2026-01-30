@@ -20,6 +20,7 @@ export const getCategoryStyles = (categories: string[], categoryName: string) =>
   return themes[index % themes.length];
 };
 
+// 기본 데이터 (사용자가 요청할 때마다 이 부분을 제가 업데이트할 것입니다)
 const INITIAL_PROJECTS: Project[] = [
   {
     id: '1',
@@ -45,16 +46,14 @@ const STORAGE_KEYS = {
 };
 
 const App: React.FC = () => {
-  // 로컬 스토리지에서 초기 데이터 로드 (함수형 초기화 사용하여 초기 렌더링 최적화)
+  // 로컬 스토리지 데이터 로드
   const [projects, setProjects] = useState<Project[]>(() => {
     const saved = localStorage.getItem(STORAGE_KEYS.PROJECTS);
     if (saved) {
       try {
         const parsed = JSON.parse(saved);
-        // Date 객체 복원
         return parsed.map((p: any) => ({ ...p, addedAt: new Date(p.addedAt) }));
       } catch (e) {
-        console.error('Failed to parse projects from storage', e);
         return INITIAL_PROJECTS;
       }
     }
@@ -67,7 +66,6 @@ const App: React.FC = () => {
       try {
         return JSON.parse(saved);
       } catch (e) {
-        console.error('Failed to parse categories from storage', e);
         return [DEFAULT_CATEGORIES.SIDE_PROJECT, DEFAULT_CATEGORIES.CLIENT_WORK, DEFAULT_CATEGORIES.LABS];
       }
     }
@@ -82,8 +80,9 @@ const App: React.FC = () => {
   
   const [deleteTargetId, setDeleteTargetId] = useState<string | null>(null);
   const [editTarget, setEditTarget] = useState<Project | null>(null);
+  const [showExportModal, setShowExportModal] = useState(false);
 
-  // 데이터 변경 시 로컬 스토리지에 저장 (Side Effects)
+  // 데이터 변경 시 로컬 스토리지에 저장
   useEffect(() => {
     localStorage.setItem(STORAGE_KEYS.PROJECTS, JSON.stringify(projects));
   }, [projects]);
@@ -156,17 +155,22 @@ const App: React.FC = () => {
   }, [categories]);
 
   const handleDeleteCategory = useCallback((name: string) => {
-    // 해당 카테고리를 가진 프로젝트들에서 해당 카테고리 제거 로직 (선택사항)
     setProjects(prev => prev.map(p => ({
       ...p,
       categories: p.categories.filter(c => c !== name)
     })));
-    
     setCategories((prev) => prev.filter((c) => c !== name));
-    if (activeCategory === name) {
-      setActiveCategory(DEFAULT_CATEGORIES.ALL);
-    }
+    if (activeCategory === name) setActiveCategory(DEFAULT_CATEGORIES.ALL);
   }, [activeCategory]);
+
+  const handleResetData = () => {
+    if (confirm('모든 데이터를 초기값으로 되돌리시겠습니까? 추가한 정보가 사라집니다.')) {
+      setProjects(INITIAL_PROJECTS);
+      setCategories([DEFAULT_CATEGORIES.SIDE_PROJECT, DEFAULT_CATEGORIES.CLIENT_WORK, DEFAULT_CATEGORIES.LABS]);
+      localStorage.clear();
+      alert('초기화되었습니다.');
+    }
+  };
 
   const toggleEditCategory = (cat: string) => {
     if (!editTarget) return;
@@ -174,6 +178,19 @@ const App: React.FC = () => {
       ? editTarget.categories.filter(c => c !== cat)
       : [...editTarget.categories, cat];
     setEditTarget({ ...editTarget, categories: newCats });
+  };
+
+  const exportData = () => {
+    const data = {
+      projects,
+      categories
+    };
+    return JSON.stringify(data, null, 2);
+  };
+
+  const copyToClipboard = () => {
+    navigator.clipboard.writeText(exportData());
+    alert('데이터가 클립보드에 복사되었습니다! 이 내용을 저에게 전달해 주세요.');
   };
 
   return (
@@ -202,7 +219,7 @@ const App: React.FC = () => {
                 )}
               </div>
               <p className="text-gray-600 text-xl font-medium max-w-2xl leading-relaxed">
-                {isAdmin ? '관리자 모드입니다. 프로젝트 수정, 삭제 및 새로운 앱 등록이 가능하며 변경사항은 브라우저에 저장됩니다.' : '다양한 웹 애플리케이션 프로젝트를 한눈에 관리하는 대시보드입니다.'}
+                {isAdmin ? '관리자 모드입니다. 데이터를 추가하고 하단 "내보내기" 버튼을 통해 배포를 요청하세요.' : '다양한 웹 애플리케이션 프로젝트를 한눈에 관리하는 대시보드입니다.'}
               </p>
             </div>
             
@@ -266,6 +283,8 @@ const App: React.FC = () => {
                   onDeleteCategory={handleDeleteCategory}
                   onAddProject={handleAddProject} 
                   getCategoryStyles={(cat) => getCategoryStyles(categories, cat)}
+                  onExport={() => setShowExportModal(true)}
+                  onReset={handleResetData}
                 />
               </div>
             )}
@@ -273,6 +292,36 @@ const App: React.FC = () => {
         </div>
       </main>
 
+      {/* 내보내기 모달 */}
+      {showExportModal && (
+        <div className="fixed inset-0 z-[200] flex items-center justify-center p-4 bg-black/95 backdrop-blur-2xl">
+          <div className="glass rounded-[40px] w-full max-w-2xl p-10 border border-white/10 animate-in fade-in zoom-in duration-300">
+            <h3 className="text-3xl font-black text-white mb-4 tracking-tighter uppercase italic">Export Configuration</h3>
+            <p className="text-gray-500 text-sm mb-8">아래 텍스트를 복사하여 저(AI)에게 전달해 주세요. 이를 소스 코드에 반영하여 영구적으로 배포하겠습니다.</p>
+            <textarea 
+              readOnly
+              value={exportData()}
+              className="w-full h-80 px-6 py-6 bg-[#080808] border border-white/5 rounded-3xl text-xs font-mono text-point-blue outline-none resize-none mb-8 custom-scroll"
+            />
+            <div className="flex gap-4">
+              <button 
+                onClick={() => setShowExportModal(false)}
+                className="flex-1 py-5 rounded-2xl glass text-gray-500 hover:text-white transition-all font-black text-xs uppercase tracking-widest"
+              >
+                Close
+              </button>
+              <button 
+                onClick={copyToClipboard}
+                className="flex-1 py-5 rounded-2xl bg-point-blue hover:bg-point-blue/90 text-white transition-all font-black text-xs uppercase tracking-widest shadow-2xl shadow-point-blue/30"
+              >
+                Copy to Clipboard
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* 수정 모달 */}
       {editTarget && (
         <div className="fixed inset-0 z-[200] flex items-center justify-center p-4 bg-black/90 backdrop-blur-xl">
           <div className="glass rounded-[40px] w-full max-w-md p-10 border border-point-blue/20 shadow-[0_0_100px_rgba(59,130,246,0.1)] animate-in fade-in zoom-in duration-300">
@@ -342,6 +391,7 @@ const App: React.FC = () => {
         </div>
       )}
 
+      {/* 삭제 확인 모달 */}
       {deleteTargetId && (
         <div className="fixed inset-0 z-[200] flex items-center justify-center p-4 bg-black/90 backdrop-blur-xl">
           <div className="glass rounded-[40px] w-full max-w-sm p-12 border border-red-500/20 shadow-[0_0_100px_rgba(239,68,68,0.1)] animate-in fade-in zoom-in duration-300">
@@ -370,6 +420,7 @@ const App: React.FC = () => {
         </div>
       )}
 
+      {/* 관리자 인증 모달 */}
       {showAdminModal && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/95 backdrop-blur-2xl">
           <div className="glass rounded-[50px] w-full max-w-md p-14 border border-white/10 shadow-[0_0_150px_rgba(59,130,246,0.1)] animate-in fade-in zoom-in duration-500">
