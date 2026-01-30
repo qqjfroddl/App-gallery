@@ -8,6 +8,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
     <script>
+      // 테일윈드 설정 유지
       tailwind.config = {
         darkMode: 'class',
         theme: {
@@ -21,12 +22,6 @@
             fontFamily: {
               sans: ['Inter', 'Noto Sans KR', 'sans-serif'],
             },
-            backgroundImage: {
-              'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
-            },
-            animation: {
-              'spin-slow': 'spin 3s linear infinite',
-            }
           }
         }
       }
@@ -47,7 +42,6 @@
         border: 1px solid rgba(255, 255, 255, 0.15);
         box-shadow: 0 0 20px rgba(59, 130, 246, 0.1);
       }
-      /* Custom scrollbar */
       ::-webkit-scrollbar {
         width: 8px;
       }
@@ -58,32 +52,26 @@
         background: #333;
         border-radius: 10px;
       }
-      ::-webkit-scrollbar-thumb:hover {
-        background: #444;
-      }
       .custom-scroll {
         scrollbar-width: thin;
         scrollbar-color: #333 transparent;
-      }
-      @keyframes spin {
-        from { transform: rotate(0deg); }
-        to { transform: rotate(360deg); }
-      }
-      .animate-spin-slow {
-        animation: spin 8s linear infinite;
       }
     </style>
   <script type="importmap">
 {
   "imports": {
-    "react/": "https://esm.sh/react@^19.2.4/",
     "react": "https://esm.sh/react@^19.2.4",
-    "react-dom/": "https://esm.sh/react-dom@^19.2.4/"
+    "react-dom/": "https://esm.sh/react-dom@^19.2.4/",
+    "react/": "https://esm.sh/react@^19.2.4/",
+    "vite": "https://esm.sh/vite@^7.3.1",
+    "@vitejs/plugin-react": "https://esm.sh/@vitejs/plugin-react@^5.1.2"
   }
 }
 </script>
 </head>
   <body>
     <div id="root"></div>
+    <!-- 앱 실행을 위한 모듈 스크립트 추가 -->
+    <script type="module" src="./index.tsx"></script>
   </body>
 </html>
