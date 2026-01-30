@@ -20,25 +20,24 @@ export const getCategoryStyles = (categories: string[], categoryName: string) =>
   return themes[index % themes.length];
 };
 
-// 기본 데이터 (사용자가 요청할 때마다 이 부분을 제가 업데이트할 것입니다)
+/**
+ * 기본 프로젝트 데이터 (관리자 모드에서 추출된 데이터 반영)
+ */
 const INITIAL_PROJECTS: Project[] = [
   {
-    id: '1',
-    name: 'TaskFlow',
-    url: 'https://taskflow.io',
-    categories: [DEFAULT_CATEGORIES.SIDE_PROJECT],
-    imageUrl: 'https://s0.wp.com/mshots/v1/https%3A%2F%2Ftaskflow.io?w=800',
-    addedAt: new Date('2024-01-10'),
-  },
-  {
-    id: '2',
-    name: 'CryptoDash',
-    url: 'https://cryptodash.example.com',
-    categories: [DEFAULT_CATEGORIES.SIDE_PROJECT, DEFAULT_CATEGORIES.LABS],
-    imageUrl: 'https://s0.wp.com/mshots/v1/https%3A%2F%2Fcryptodash.example.com?w=800',
-    addedAt: new Date('2024-02-15'),
-  },
+    id: "1769763462349",
+    name: "인생관리",
+    url: "https://led-with-ai.vercel.app/",
+    categories: ["업무생산성"],
+    imageUrl: "https://s0.wp.com/mshots/v1/https%3A%2F%2Fled-with-ai.vercel.app%2F?w=800",
+    addedAt: new Date("2026-01-30T08:57:42.349Z")
+  }
 ];
+
+/**
+ * 기본 카테고리 리스트 (관리자 모드에서 추출된 데이터 반영)
+ */
+const INITIAL_CATEGORIES = ["업무생산성"];
 
 const STORAGE_KEYS = {
   PROJECTS: 'gallery_projects_v1.2',
@@ -46,7 +45,7 @@ const STORAGE_KEYS = {
 };
 
 const App: React.FC = () => {
-  // 로컬 스토리지 데이터 로드
+  // 로컬 스토리지 데이터 로드 (없을 경우 INITIAL 값 사용)
   const [projects, setProjects] = useState<Project[]>(() => {
     const saved = localStorage.getItem(STORAGE_KEYS.PROJECTS);
     if (saved) {
@@ -66,10 +65,10 @@ const App: React.FC = () => {
       try {
         return JSON.parse(saved);
       } catch (e) {
-        return [DEFAULT_CATEGORIES.SIDE_PROJECT, DEFAULT_CATEGORIES.CLIENT_WORK, DEFAULT_CATEGORIES.LABS];
+        return INITIAL_CATEGORIES;
       }
     }
-    return [DEFAULT_CATEGORIES.SIDE_PROJECT, DEFAULT_CATEGORIES.CLIENT_WORK, DEFAULT_CATEGORIES.LABS];
+    return INITIAL_CATEGORIES;
   });
 
   const [activeCategory, setActiveCategory] = useState<string>(DEFAULT_CATEGORIES.ALL);
@@ -82,7 +81,7 @@ const App: React.FC = () => {
   const [editTarget, setEditTarget] = useState<Project | null>(null);
   const [showExportModal, setShowExportModal] = useState(false);
 
-  // 데이터 변경 시 로컬 스토리지에 저장
+  // 데이터 변경 시 로컬 스토리지에 자동 저장
   useEffect(() => {
     localStorage.setItem(STORAGE_KEYS.PROJECTS, JSON.stringify(projects));
   }, [projects]);
@@ -166,7 +165,7 @@ const App: React.FC = () => {
   const handleResetData = () => {
     if (confirm('모든 데이터를 초기값으로 되돌리시겠습니까? 추가한 정보가 사라집니다.')) {
       setProjects(INITIAL_PROJECTS);
-      setCategories([DEFAULT_CATEGORIES.SIDE_PROJECT, DEFAULT_CATEGORIES.CLIENT_WORK, DEFAULT_CATEGORIES.LABS]);
+      setCategories(INITIAL_CATEGORIES);
       localStorage.clear();
       alert('초기화되었습니다.');
     }
