@@ -44,7 +44,7 @@ const Sidebar: React.FC<SidebarProps> = ({
     } else if (selectedCategories.length === 0) {
       alert('최소 하나 이상의 카테고리를 선택해주세요.');
     } else if (!urlInput.trim()) {
-      alert('URL을 입력해주세요.');
+      alert('URL 주소를 입력해주세요.');
     }
   };
 
@@ -68,25 +68,25 @@ const Sidebar: React.FC<SidebarProps> = ({
         
         {/* 프로젝트 추가 카드 */}
         <div className="glass rounded-2xl p-6 border border-white/5 shadow-xl">
-          <h3 className="text-lg font-bold mb-2 text-white uppercase italic tracking-tight">Add New Project</h3>
+          <h3 className="text-lg font-bold mb-2 text-white uppercase italic tracking-tight">새 프로젝트 등록</h3>
           <p className="text-gray-500 text-[11px] font-medium mb-6 leading-relaxed">
             웹사이트의 이름과 URL을 입력하여 갤러리에 추가하세요.
           </p>
           <div className="space-y-4">
             <div>
-              <label className="block text-[10px] font-bold text-gray-600 uppercase tracking-widest mb-1.5 ml-1">Name</label>
+              <label className="block text-[10px] font-bold text-gray-600 uppercase tracking-widest mb-1.5 ml-1">앱 이름</label>
               <input
                 type="text"
                 value={nameInput}
                 onChange={(e) => setNameInput(e.target.value)}
                 onKeyDown={(e) => handleKeyPress(e, handleAddProject)}
                 className="block w-full px-4 py-2.5 bg-white/5 border border-white/10 rounded-xl focus:ring-2 focus:ring-point-blue/50 text-sm text-white transition-all outline-none"
-                placeholder="App Name"
+                placeholder="예: 내 포트폴리오"
               />
             </div>
 
             <div>
-              <label className="block text-[10px] font-bold text-gray-600 uppercase tracking-widest mb-1.5 ml-1">URL Address</label>
+              <label className="block text-[10px] font-bold text-gray-600 uppercase tracking-widest mb-1.5 ml-1">URL 주소</label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-500">
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -105,7 +105,7 @@ const Sidebar: React.FC<SidebarProps> = ({
             </div>
 
             <div>
-              <label className="block text-[10px] font-bold text-gray-600 uppercase tracking-widest mb-1.5 ml-1">Categories (Multi)</label>
+              <label className="block text-[10px] font-bold text-gray-600 uppercase tracking-widest mb-1.5 ml-1">카테고리 선택 (다중)</label>
               <div className="flex flex-wrap gap-2 max-h-48 overflow-y-auto pr-1 custom-scroll">
                 {categories.map((cat) => {
                   const styles = getCategoryStyles(cat);
@@ -136,7 +136,7 @@ const Sidebar: React.FC<SidebarProps> = ({
                   : 'bg-point-blue hover:bg-point-blue/90 text-white shadow-point-blue/40'
               }`}
             >
-              Add Project
+              프로젝트 추가
             </button>
           </div>
         </div>
@@ -144,7 +144,7 @@ const Sidebar: React.FC<SidebarProps> = ({
         {/* 카테고리 관리 카드 */}
         <div className="glass rounded-2xl p-6 border border-white/5">
           <div className="flex items-center justify-between mb-1">
-            <h3 className="text-lg font-bold text-white uppercase italic tracking-tight">Categories</h3>
+            <h3 className="text-lg font-bold text-white uppercase italic tracking-tight">카테고리 관리</h3>
             <span className="text-[10px] bg-white/10 px-2 py-0.5 rounded text-gray-400 font-bold">{categories.length}</span>
           </div>
           <div className="space-y-4 mt-6">
@@ -155,7 +155,7 @@ const Sidebar: React.FC<SidebarProps> = ({
                 onChange={(e) => setNewCategoryInput(e.target.value)}
                 onKeyDown={(e) => handleKeyPress(e, handleAddCategory)}
                 className="block flex-1 px-4 py-2.5 bg-white/5 border border-white/5 rounded-xl focus:ring-2 focus:ring-point-blue/50 text-xs text-white outline-none"
-                placeholder="New Category..."
+                placeholder="새 카테고리 이름..."
               />
               <button 
                 onClick={handleAddCategory}
@@ -194,19 +194,19 @@ const Sidebar: React.FC<SidebarProps> = ({
           </div>
         </div>
 
-        {/* 데이터 관리 액션 (내보내기/초기화) */}
+        {/* 데이터 관리 액션 */}
         <div className="grid grid-cols-2 gap-3 mt-10">
           <button 
             onClick={onReset}
             className="py-4 px-4 rounded-2xl glass border-white/5 text-[10px] font-black text-gray-700 hover:text-red-400 hover:border-red-500/20 transition-all uppercase tracking-widest"
           >
-            Reset All
+            데이터 초기화
           </button>
           <button 
             onClick={onExport}
             className="py-4 px-4 rounded-2xl bg-white text-black text-[10px] font-black hover:bg-point-blue hover:text-white transition-all uppercase tracking-widest shadow-2xl shadow-white/10"
           >
-            Export JSON
+            내보내기 (JSON)
           </button>
         </div>
 

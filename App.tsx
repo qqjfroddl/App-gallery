@@ -163,11 +163,11 @@ const App: React.FC = () => {
   }, [activeCategory]);
 
   const handleResetData = () => {
-    if (confirm('모든 데이터를 초기값으로 되돌리시겠습니까? 추가한 정보가 사라집니다.')) {
+    if (confirm('모든 데이터를 초기값으로 되돌리시겠습니까? 직접 추가한 모든 정보가 삭제됩니다.')) {
       setProjects(INITIAL_PROJECTS);
       setCategories(INITIAL_CATEGORIES);
       localStorage.clear();
-      alert('초기화되었습니다.');
+      alert('초기화가 완료되었습니다.');
     }
   };
 
@@ -189,7 +189,7 @@ const App: React.FC = () => {
 
   const copyToClipboard = () => {
     navigator.clipboard.writeText(exportData());
-    alert('데이터가 클립보드에 복사되었습니다! 이 내용을 저에게 전달해 주세요.');
+    alert('데이터가 클립보드에 복사되었습니다! 이 내용을 채팅창에 붙여넣어 저에게 전달해 주세요.');
   };
 
   return (
@@ -213,12 +213,12 @@ const App: React.FC = () => {
                       <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-point-purple opacity-75"></span>
                       <span className="relative inline-flex rounded-full h-2 w-2 bg-point-purple"></span>
                     </span>
-                    Admin active
+                    관리자 모드 활성
                   </div>
                 )}
               </div>
               <p className="text-gray-600 text-xl font-medium max-w-2xl leading-relaxed">
-                {isAdmin ? '관리자 모드입니다. 데이터를 추가하고 하단 "내보내기" 버튼을 통해 배포를 요청하세요.' : '다양한 웹 애플리케이션 프로젝트를 한눈에 관리하는 대시보드입니다.'}
+                {isAdmin ? '프로젝트를 관리하고 "데이터 내보내기" 버튼을 통해 배포 업데이트를 요청하세요.' : '웹 애플리케이션 개발 프로젝트를 한눈에 볼 수 있는 갤러리 대시보드입니다.'}
               </p>
             </div>
             
@@ -268,7 +268,7 @@ const App: React.FC = () => {
                   ))
                 ) : (
                   <div className="col-span-full py-48 text-center glass rounded-[40px] border border-dashed border-white/5 bg-white/[0.01]">
-                    <p className="text-gray-700 font-black text-xs uppercase tracking-[0.4em] italic">No active projects</p>
+                    <p className="text-gray-700 font-black text-xs uppercase tracking-[0.4em] italic">등록된 프로젝트가 없습니다</p>
                   </div>
                 )}
               </div>
@@ -295,8 +295,8 @@ const App: React.FC = () => {
       {showExportModal && (
         <div className="fixed inset-0 z-[200] flex items-center justify-center p-4 bg-black/95 backdrop-blur-2xl">
           <div className="glass rounded-[40px] w-full max-w-2xl p-10 border border-white/10 animate-in fade-in zoom-in duration-300">
-            <h3 className="text-3xl font-black text-white mb-4 tracking-tighter uppercase italic">Export Configuration</h3>
-            <p className="text-gray-500 text-sm mb-8">아래 텍스트를 복사하여 저(AI)에게 전달해 주세요. 이를 소스 코드에 반영하여 영구적으로 배포하겠습니다.</p>
+            <h3 className="text-3xl font-black text-white mb-4 tracking-tighter uppercase italic">데이터 내보내기</h3>
+            <p className="text-gray-500 text-sm mb-8">아래 JSON 텍스트를 복사하여 저에게 전달해 주세요. 소스 코드의 기본값으로 업데이트해 드립니다.</p>
             <textarea 
               readOnly
               value={exportData()}
@@ -307,13 +307,13 @@ const App: React.FC = () => {
                 onClick={() => setShowExportModal(false)}
                 className="flex-1 py-5 rounded-2xl glass text-gray-500 hover:text-white transition-all font-black text-xs uppercase tracking-widest"
               >
-                Close
+                닫기
               </button>
               <button 
                 onClick={copyToClipboard}
                 className="flex-1 py-5 rounded-2xl bg-point-blue hover:bg-point-blue/90 text-white transition-all font-black text-xs uppercase tracking-widest shadow-2xl shadow-point-blue/30"
               >
-                Copy to Clipboard
+                클립보드 복사
               </button>
             </div>
           </div>
@@ -324,10 +324,10 @@ const App: React.FC = () => {
       {editTarget && (
         <div className="fixed inset-0 z-[200] flex items-center justify-center p-4 bg-black/90 backdrop-blur-xl">
           <div className="glass rounded-[40px] w-full max-w-md p-10 border border-point-blue/20 shadow-[0_0_100px_rgba(59,130,246,0.1)] animate-in fade-in zoom-in duration-300">
-            <h3 className="text-3xl font-black text-white mb-8 tracking-tighter uppercase">Project Update</h3>
+            <h3 className="text-3xl font-black text-white mb-8 tracking-tighter uppercase">프로젝트 정보 수정</h3>
             <div className="space-y-6">
               <div>
-                <label className="block text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-2 ml-1">Name</label>
+                <label className="block text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-2 ml-1">이름</label>
                 <input
                   type="text"
                   value={editTarget.name}
@@ -336,7 +336,7 @@ const App: React.FC = () => {
                 />
               </div>
               <div>
-                <label className="block text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-2 ml-1">URL</label>
+                <label className="block text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-2 ml-1">URL 주소</label>
                 <input
                   type="text"
                   value={editTarget.url}
@@ -345,7 +345,7 @@ const App: React.FC = () => {
                 />
               </div>
               <div>
-                <label className="block text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-2 ml-1">Categories (다중 선택)</label>
+                <label className="block text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-2 ml-1">카테고리 (다중 선택)</label>
                 <div className="flex flex-wrap gap-2">
                   {categories.map((cat) => {
                     const styles = getCategoryStyles(categories, cat);
@@ -372,7 +372,7 @@ const App: React.FC = () => {
                 onClick={() => setEditTarget(null)}
                 className="flex-1 py-5 rounded-2xl glass text-gray-500 hover:text-white transition-all font-black text-xs uppercase"
               >
-                Cancel
+                취소
               </button>
               <button 
                 onClick={() => handleUpdateProject(editTarget)}
@@ -383,7 +383,7 @@ const App: React.FC = () => {
                   : 'bg-point-blue hover:bg-point-blue/90 text-white shadow-point-blue/40'
                 }`}
               >
-                Save Changes
+                저장하기
               </button>
             </div>
           </div>
@@ -400,19 +400,19 @@ const App: React.FC = () => {
               </svg>
             </div>
             <h3 className="text-2xl font-black text-white mb-2 tracking-tighter uppercase">프로젝트 삭제</h3>
-            <p className="text-gray-500 text-base mb-10 font-medium">이 프로젝트를 영구적으로 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다.</p>
+            <p className="text-gray-500 text-base mb-10 font-medium">정말 이 프로젝트를 삭제하시겠습니까? 삭제된 데이터는 복구할 수 없습니다.</p>
             <div className="flex gap-4">
               <button 
                 onClick={() => setDeleteTargetId(null)}
                 className="flex-1 py-5 px-4 rounded-2xl glass text-gray-500 hover:text-white transition-all font-black text-xs uppercase"
               >
-                Cancel
+                취소
               </button>
               <button 
                 onClick={confirmDelete}
                 className="flex-1 py-5 px-4 rounded-2xl bg-red-600 hover:bg-red-500 text-white transition-all font-black text-xs uppercase shadow-2xl shadow-red-600/30"
               >
-                Delete
+                삭제하기
               </button>
             </div>
           </div>
@@ -428,8 +428,8 @@ const App: React.FC = () => {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
               </svg>
             </div>
-            <h3 className="text-4xl font-black text-white mb-4 tracking-tighter">SECURE LOGIN</h3>
-            <p className="text-gray-600 text-lg mb-10 font-medium leading-snug">갤러리 관리를 위한 인증 코드를 입력하세요.</p>
+            <h3 className="text-4xl font-black text-white mb-4 tracking-tighter uppercase">관리자 로그인</h3>
+            <p className="text-gray-600 text-lg mb-10 font-medium leading-snug">갤러리 관리를 위한 4자리 암호를 입력하세요.</p>
             <input
               type="password"
               value={passwordInput}
@@ -444,13 +444,13 @@ const App: React.FC = () => {
                 onClick={() => setShowAdminModal(false)}
                 className="flex-1 py-6 px-4 rounded-[20px] glass text-gray-500 hover:text-white transition-all font-black text-xs uppercase tracking-widest border-white/5"
               >
-                Cancel
+                취소
               </button>
               <button 
                 onClick={handleAdminAuth}
                 className="flex-1 py-6 px-4 rounded-[20px] bg-point-blue hover:bg-point-blue/90 text-white transition-all font-black text-xs uppercase tracking-widest shadow-2xl shadow-point-blue/40"
               >
-                Verify
+                인증하기
               </button>
             </div>
           </div>

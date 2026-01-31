@@ -45,7 +45,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
             type="button"
             onClick={handleEdit}
             className="w-10 h-10 rounded-xl bg-point-blue hover:bg-point-blue/90 text-white flex items-center justify-center shadow-2xl border border-white/10 active:scale-90"
-            title="수정"
+            title="프로젝트 수정"
           >
             <svg className="w-5 h-5 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
@@ -55,7 +55,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
             type="button"
             onClick={handleDelete}
             className="w-10 h-10 rounded-xl bg-red-600 hover:bg-red-500 text-white flex items-center justify-center shadow-2xl border border-white/10 active:scale-90"
-            title="삭제"
+            title="프로젝트 삭제"
           >
             <svg className="w-5 h-5 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
@@ -75,13 +75,13 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
           />
         ) : (
           <div className="w-full h-full flex flex-col items-center justify-center bg-white/5">
-            <span className="text-[9px] font-black opacity-20 tracking-[0.2em] uppercase">No Preview</span>
+            <span className="text-[9px] font-black opacity-20 tracking-[0.2em] uppercase">미리보기 없음</span>
           </div>
         )}
         
         <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent opacity-80 group-hover:opacity-95 transition-opacity duration-300"></div>
         
-        {/* 다중 카테고리 배지 표시 */}
+        {/* 카테고리 배지 표시 */}
         <div className="absolute bottom-3 left-4 flex flex-wrap gap-1.5 pr-4">
           {project.categories.map((cat) => {
             const styles = getCategoryStyles(allCategories, cat);
@@ -111,7 +111,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
             rel="noopener noreferrer"
             className="group/btn flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white/5 hover:bg-point-blue text-gray-500 hover:text-white transition-all text-[10px] font-black border border-white/5 hover:border-point-blue/50"
           >
-            <span className="tracking-widest uppercase">Visit</span>
+            <span className="tracking-widest uppercase">사이트 이동</span>
             <svg className="w-3 h-3 transition-transform group-hover/btn:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M14 5l7 7m0 0l-7 7m7-7H3" />
             </svg>
