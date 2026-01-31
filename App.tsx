@@ -21,9 +21,17 @@ export const getCategoryStyles = (categories: string[], categoryName: string) =>
 };
 
 /**
- * 기본 프로젝트 데이터
+ * 기본 프로젝트 데이터 (제공된 최신 24개 데이터)
  */
 const INITIAL_PROJECTS: Project[] = [
+  {
+    id: "1769763462349",
+    name: "인생관리",
+    url: "https://led-with-ai.vercel.app/",
+    categories: ["업무생산성"],
+    imageUrl: "https://s0.wp.com/mshots/v1/https%3A%2F%2Fled-with-ai.vercel.app%2F?w=800",
+    addedAt: new Date("2026-01-30T08:57:42.349Z")
+  },
   {
     id: "1769837827574",
     name: "2026 AI UI 디자인 프롬프트 생성기",
@@ -33,17 +41,185 @@ const INITIAL_PROJECTS: Project[] = [
     addedAt: new Date("2026-01-31T05:37:07.574Z")
   },
   {
-    id: "1769763462349",
-    name: "인생관리",
-    url: "https://led-with-ai.vercel.app/",
-    categories: ["업무생산성"],
-    imageUrl: "https://s0.wp.com/mshots/v1/https%3A%2F%2Fled-with-ai.vercel.app%2F?w=800",
-    addedAt: new Date("2026-01-30T08:57:42.349Z")
+    id: "1769843668362",
+    name: "바이브코딩 UI 마크다운 생성기 초보자용",
+    url: "https://rinooks7.cafe24.com/vibe/ui_design/",
+    categories: ["디자인", "바이브코딩", "프롬프트"],
+    imageUrl: "https://s0.wp.com/mshots/v1/https%3A%2F%2Frinooks7.cafe24.com%2Fvibe%2Fui_design%2F?w=800",
+    addedAt: new Date("2026-01-31T07:14:28.362Z")
+  },
+  {
+    id: "1769844715410",
+    name: "웹툰 생성기",
+    url: "https://ai.studio/apps/drive/1BgGj2o18wnW3l6_QgZm-2KvtobWQjyW4?fullscreenApplet=true",
+    categories: ["PPT문서작성", "기타", "디자인"],
+    imageUrl: "https://s0.wp.com/mshots/v1/https%3A%2F%2Fai.studio%2Fapps%2Fdrive%2F1BgGj2o18wnW3l6_QgZm-2KvtobWQjyW4%3FfullscreenApplet%3Dtrue?w=800",
+    addedAt: new Date("2026-01-31T07:31:55.410Z")
+  },
+  {
+    id: "1769843882992",
+    name: "회의록 생성기 (음성기반)",
+    url: "https://gemini.google.com/share/4fc1853b8981",
+    categories: ["업무생산성", "PPT문서작성"],
+    imageUrl: "https://s0.wp.com/mshots/v1/https%3A%2F%2Fgemini.google.com%2Fshare%2F4fc1853b8981?w=800",
+    addedAt: new Date("2026-01-31T07:18:02.992Z")
+  },
+  {
+    id: "1769843976276",
+    name: "트렌드, 뉴스 요약",
+    url: "https://aistudio.google.com/apps/drive/1pq1w5C4QAnlXYZUHYljfBTDx5nLyLRm8?fullscreenApplet=true&showPreview=true&showAssistant=true",
+    categories: ["업무생산성", "PPT문서작성"],
+    imageUrl: "https://s0.wp.com/mshots/v1/https%3A%2F%2Faistudio.google.com%2Fapps%2Fdrive%2F1pq1w5C4QAnlXYZUHYljfBTDx5nLyLRm8%3FfullscreenApplet%3Dtrue%26showPreview%3Dtrue%26showAssistant%3Dtrue?w=800",
+    addedAt: new Date("2026-01-31T07:19:36.276Z")
+  },
+  {
+    id: "1769844032312",
+    name: "PDF변환기 (PPT, Word, 이미지추출)",
+    url: "https://gemini.google.com/share/ceb5f6f1ce95",
+    categories: ["업무생산성", "PPT문서작성"],
+    imageUrl: "https://s0.wp.com/mshots/v1/https%3A%2F%2Fgemini.google.com%2Fshare%2Fceb5f6f1ce95?w=800",
+    addedAt: new Date("2026-01-31T07:20:32.312Z")
+  },
+  {
+    id: "1769843842032",
+    name: "거래명세서 생성기",
+    url: "https://gemini.google.com/share/83e482ad4139",
+    categories: ["업무생산성", "PPT문서작성"],
+    imageUrl: "https://s0.wp.com/mshots/v1/https%3A%2F%2Fgemini.google.com%2Fshare%2F83e482ad4139?w=800",
+    addedAt: new Date("2026-01-31T07:17:22.032Z")
+  },
+  {
+    id: "1769843807453",
+    name: "견적서 생성기",
+    url: "https://gemini.google.com/share/1a4ba47f82f6",
+    categories: ["업무생산성", "PPT문서작성"],
+    imageUrl: "https://s0.wp.com/mshots/v1/https%3A%2F%2Fgemini.google.com%2Fshare%2F1a4ba47f82f6?w=800",
+    addedAt: new Date("2026-01-31T07:16:47.453Z")
+  },
+  {
+    id: "1769849575201",
+    name: "AI 쇼츠 영상 제작 도우미",
+    url: "https://gemini.google.com/share/5831dff87d6d",
+    categories: ["동영상", "프롬프트"],
+    imageUrl: "https://s0.wp.com/mshots/v1/https%3A%2F%2Fgemini.google.com%2Fshare%2F5831dff87d6d?w=800",
+    addedAt: new Date("2026-01-31T08:52:55.201Z")
+  },
+  {
+    id: "1769849512112",
+    name: " EV 충전 커넥트 (서울/경기 실시간 충전 포털)",
+    url: "https://gemini.google.com/share/85c9d3fb4c40",
+    categories: ["기타"],
+    imageUrl: "https://s0.wp.com/mshots/v1/https%3A%2F%2Fgemini.google.com%2Fshare%2F85c9d3fb4c40?w=800",
+    addedAt: new Date("2026-01-31T08:51:52.112Z")
+  },
+  {
+    id: "1769849497519",
+    name: "기업 분석 & 채용 솔루션",
+    url: "https://gemini.google.com/share/7f55df595e9b",
+    categories: ["기타"],
+    imageUrl: "https://s0.wp.com/mshots/v1/https%3A%2F%2Fgemini.google.com%2Fshare%2F7f55df595e9b?w=800",
+    addedAt: new Date("2026-01-31T08:51:37.519Z")
+  },
+  {
+    id: "1769849433251",
+    name: "이미지-3D 변환 IMAGE TO VOXEL ART",
+    url: "https://ai.studio/apps/bundled/image_to_voxel?fullscreenApplet=true",
+    categories: ["디자인"],
+    imageUrl: "https://s0.wp.com/mshots/v1/https%3A%2F%2Fai.studio%2Fapps%2Fbundled%2Fimage_to_voxel%3FfullscreenApplet%3Dtrue?w=800",
+    addedAt: new Date("2026-01-31T08:50:33.251Z")
+  },
+  {
+    id: "1769849561446",
+    name: "게임_사무실 탈출",
+    url: "https://gemini.google.com/share/beb0141ed32b",
+    categories: ["기타"],
+    imageUrl: "https://s0.wp.com/mshots/v1/https%3A%2F%2Fgemini.google.com%2Fshare%2Fbeb0141ed32b?w=800",
+    addedAt: new Date("2026-01-31T08:52:41.446Z")
+  },
+  {
+    id: "1769849382727",
+    name: "전국 연수 장소 map",
+    url: "https://gemini.google.com/share/9e62b7f683b6",
+    categories: ["기타"],
+    imageUrl: "https://s0.wp.com/mshots/v1/https%3A%2F%2Fgemini.google.com%2Fshare%2F9e62b7f683b6?w=800",
+    addedAt: new Date("2026-01-31T08:49:42.727Z")
+  },
+  {
+    id: "1769849340692",
+    name: "연하장 제작소",
+    url: "https://service-2026-ai-233075408916.us-west1.run.app/",
+    categories: ["기타", "PPT문서작성"],
+    imageUrl: "https://s0.wp.com/mshots/v1/https%3A%2F%2Fservice-2026-ai-233075408916.us-west1.run.app%2F?w=800",
+    addedAt: new Date("2026-01-31T08:49:00.692Z")
+  },
+  {
+    id: "1769844251823",
+    name: "표창장 생성기",
+    url: "https://gemini.google.com/share/ab91896f7fcd",
+    categories: ["업무생산성", "PPT문서작성"],
+    imageUrl: "https://s0.wp.com/mshots/v1/https%3A%2F%2Fgemini.google.com%2Fshare%2Fab91896f7fcd?w=800",
+    addedAt: new Date("2026-01-31T07:24:11.823Z")
+  },
+  {
+    id: "1769844191929",
+    name: "Remove Watermark from NotebookLM Video Overviews",
+    url: "https://www.notebooklmwatermark.com/video-watermark-remover",
+    categories: ["동영상", "디자인"],
+    imageUrl: "https://s0.wp.com/mshots/v1/https%3A%2F%2Fwww.notebooklmwatermark.com%2Fvideo-watermark-remover?w=800",
+    addedAt: new Date("2026-01-31T07:23:11.929Z")
+  },
+  {
+    id: "1769844146192",
+    name: "나노바나나 디자인 프롬프트",
+    url: "https://furoku.github.io/bananaX/projects/infographic-evaluation/ko/",
+    categories: ["디자인", "바이브코딩", "프롬프트"],
+    imageUrl: "https://s0.wp.com/mshots/v1/https%3A%2F%2Ffuroku.github.io%2FbananaX%2Fprojects%2Finfographic-evaluation%2Fko%2F?w=800",
+    addedAt: new Date("2026-01-31T07:22:26.192Z")
+  },
+  {
+    id: "1769849545450",
+    name: "이번 주 급식 뭐지?",
+    url: "https://gemini.google.com/share/be75bc99ad40",
+    categories: ["기타"],
+    imageUrl: "https://s0.wp.com/mshots/v1/https%3A%2F%2Fgemini.google.com%2Fshare%2Fbe75bc99ad40?w=800",
+    addedAt: new Date("2026-01-31T08:52:25.450Z")
+  },
+  {
+    id: "1769844110624",
+    name: "2026 AI UI Prompt Generator",
+    url: "https://ai-ui-design-prompt-generator.vercel.app/",
+    categories: ["업무생산성", "바이브코딩", "프롬프트", "디자인"],
+    imageUrl: "https://s0.wp.com/mshots/v1/https%3A%2F%2Fai-ui-design-prompt-generator.vercel.app%2F?w=800",
+    addedAt: new Date("2026-01-31T07:21:50.624Z")
+  },
+  {
+    id: "1769843699004",
+    name: "프롬프트",
+    url: "https://www.prpt.ai/prompt/list",
+    categories: ["프롬프트"],
+    imageUrl: "https://s0.wp.com/mshots/v1/https%3A%2F%2Fwww.prpt.ai%2Fprompt%2Flist?w=800",
+    addedAt: new Date("2026-01-31T07:14:59.004Z")
+  },
+  {
+    id: "1769849464173",
+    name: "게임_Road Fight",
+    url: "https://gemini.google.com/share/34212c109b69",
+    categories: ["게임"],
+    imageUrl: "https://s0.wp.com/mshots/v1/https%3A%2F%2Fgemini.google.com%2Fshare%2F34212c109b69?w=800",
+    addedAt: new Date("2026-01-31T08:51:04.173Z")
+  },
+  {
+    id: "1769849358699",
+    name: "게임_인형뽑기",
+    url: "https://gemini.google.com/share/fa1a07849353",
+    categories: ["게임"],
+    imageUrl: "https://s0.wp.com/mshots/v1/https%3A%2F%2Fgemini.google.com%2Fshare%2Ffa1a07849353?w=800",
+    addedAt: new Date("2026-01-31T08:49:18.699Z")
   }
 ];
 
 /**
- * 기본 카테고리 리스트
+ * 기본 카테고리 리스트 (제공된 8개 목록)
  */
 const INITIAL_CATEGORIES = [
   "업무생산성",
@@ -51,12 +227,14 @@ const INITIAL_CATEGORIES = [
   "바이브코딩",
   "PPT문서작성",
   "동영상",
-  "프롬프트"
+  "프롬프트",
+  "게임",
+  "기타"
 ];
 
 const STORAGE_KEYS = {
-  PROJECTS: 'gallery_projects_v1.3',
-  CATEGORIES: 'gallery_categories_v1.3',
+  PROJECTS: 'gallery_projects_v1.6',
+  CATEGORIES: 'gallery_categories_v1.6',
 };
 
 const App: React.FC = () => {
@@ -198,11 +376,7 @@ const App: React.FC = () => {
   const handleDragEnter = (targetIndex: number) => {
     if (!isAdmin || draggedItemIndex === null || draggedItemIndex === targetIndex) return;
     
-    // 전체 리스트에서의 인덱스를 정확히 맞추기 위해 필터링 되지 않은 전체 프로젝트 리스트를 기준으로 정렬해야 함
-    // 여기서는 화면에 보이는 순서대로 정렬하도록 구현 (필터링 상태일 때는 필터링된 범위 내에서만 정렬)
     const newProjects = [...projects];
-    
-    // 필터링된 리스트의 아이템이 실제 리스트의 어디에 있는지 찾음
     const itemToMove = filteredProjects[draggedItemIndex];
     const targetItem = filteredProjects[targetIndex];
     
@@ -249,7 +423,9 @@ const App: React.FC = () => {
       <main className="flex-1 max-w-[1920px] mx-auto w-full px-6 py-12">
         <div className="flex flex-col gap-14">
           
-          <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 border-b border-white/5 pb-10">
+          {/* 상단 섹션: 제목, 설명 및 줄바꿈되는 카테고리 필터 */}
+          <div className="border-b border-white/5 pb-10 space-y-10">
+            {/* 제목 및 설명 영역 */}
             <div className="space-y-4">
               <div className="flex items-center gap-5">
                 <h2 className="text-6xl font-black tracking-tighter italic">GALLERY</h2>
@@ -263,12 +439,13 @@ const App: React.FC = () => {
                   </div>
                 )}
               </div>
-              <p className="text-gray-600 text-xl font-medium max-w-2xl leading-relaxed">
+              <p className="text-gray-600 text-xl font-medium max-w-4xl leading-relaxed">
                 {isAdmin ? '프로젝트를 드래그하여 순서를 변경하거나 관리할 수 있습니다.' : '웹 애플리케이션 개발 프로젝트를 한눈에 볼 수 있는 갤러리 대시보드입니다.'}
               </p>
             </div>
             
-            <div className="flex gap-2.5 overflow-x-auto pb-4 md:pb-0 custom-scroll no-scrollbar">
+            {/* 카테고리 필터 영역: flex-wrap 적용으로 자동 줄바꿈 */}
+            <div className="flex flex-wrap gap-2.5">
               <button
                 onClick={() => setActiveCategory(DEFAULT_CATEGORIES.ALL)}
                 className={`px-8 py-3.5 rounded-2xl text-xs font-black transition-all whitespace-nowrap uppercase tracking-widest ${

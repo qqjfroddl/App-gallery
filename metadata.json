@@ -1,7 +1,7 @@
 {
-  "name": "Gallery.IO",
+  "name": "바이브코딩 앱 갤러리",
   "description": "Premium Web App Project Gallery Dashboard with Glassmorphism UI",
-  "version": "1.4.0",
+  "version": "1.6.0",
   "author": "Deeptactlearning",
   "requestFramePermissions": []
 }
