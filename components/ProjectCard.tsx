@@ -5,17 +5,27 @@ import { getCategoryStyles } from '../App';
 
 interface ProjectCardProps {
   project: Project;
+  index: number;
   isAdmin?: boolean;
+  isDragging?: boolean;
   onDelete?: (id: string) => void;
   onEdit?: () => void;
-  allCategories: string[]; // 색상 스타일링을 위해 전체 카테고리 목록 필요
+  onDragStart?: () => void;
+  onDragEnter?: () => void;
+  onDragEnd?: () => void;
+  allCategories: string[];
 }
 
 const ProjectCard: React.FC<ProjectCardProps> = ({ 
   project, 
+  index,
   isAdmin, 
+  isDragging,
   onDelete, 
   onEdit,
+  onDragStart,
+  onDragEnter,
+  onDragEnd,
   allCategories
 }) => {
   const [imageError, setImageError] = useState(false);
@@ -36,8 +46,23 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
     }
   };
 
+  // 드래그 관련 핸들러
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault(); // 드롭 허용을 위해 기본 동작 방지
+  };
+
   return (
-    <div className="group glass-card glass rounded-2xl overflow-hidden transition-all duration-500 flex flex-col border border-white/5 relative h-full hover:translate-y-[-8px] shadow-2xl">
+    <div 
+      draggable={isAdmin}
+      onDragStart={onDragStart}
+      onDragEnter={onDragEnter}
+      onDragEnd={onDragEnd}
+      onDragOver={handleDragOver}
+      className={`group glass-card glass rounded-2xl overflow-hidden transition-all duration-500 flex flex-col border border-white/5 relative h-full shadow-2xl 
+        ${isAdmin ? 'cursor-grab active:cursor-grabbing' : ''} 
+        ${isDragging ? 'opacity-20 scale-95 border-point-blue/50' : 'hover:translate-y-[-8px]'}
+      `}
+    >
       
       {isAdmin && (
         <div className="absolute top-3 right-3 z-50 flex gap-2 opacity-0 group-hover:opacity-100 transition-all">
@@ -61,6 +86,17 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
             </svg>
           </button>
+        </div>
+      )}
+
+      {/* 드래그 핸들 안내 (관리자 모드 전용) */}
+      {isAdmin && (
+        <div className="absolute top-3 left-3 z-10 opacity-30 group-hover:opacity-100 transition-opacity">
+          <div className="w-8 h-8 flex items-center justify-center text-white/50">
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M4 8h16M4 16h16" />
+            </svg>
+          </div>
         </div>
       )}
 
@@ -109,7 +145,8 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
             href={project.url}
             target="_blank"
             rel="noopener noreferrer"
-            className="group/btn flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white/5 hover:bg-point-blue text-gray-500 hover:text-white transition-all text-[10px] font-black border border-white/5 hover:border-point-blue/50"
+            onClick={(e) => isAdmin && e.preventDefault()} // 관리자 모드에선 링크 클릭 방지 (드래그 우선)
+            className={`group/btn flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white/5 hover:bg-point-blue text-gray-500 hover:text-white transition-all text-[10px] font-black border border-white/5 hover:border-point-blue/50 ${isAdmin ? 'pointer-events-none opacity-50' : ''}`}
           >
             <span className="tracking-widest uppercase">사이트 이동</span>
             <svg className="w-3 h-3 transition-transform group-hover/btn:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">

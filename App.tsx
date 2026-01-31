@@ -21,9 +21,17 @@ export const getCategoryStyles = (categories: string[], categoryName: string) =>
 };
 
 /**
- * 기본 프로젝트 데이터 (관리자 모드에서 추출된 데이터 반영)
+ * 기본 프로젝트 데이터
  */
 const INITIAL_PROJECTS: Project[] = [
+  {
+    id: "1769837827574",
+    name: "2026 AI UI 디자인 프롬프트 생성기",
+    url: "https://gemini.google.com/share/5cd8d32fee6e",
+    categories: ["디자인", "바이브코딩", "프롬프트"],
+    imageUrl: "https://s0.wp.com/mshots/v1/https%3A%2F%2Fgemini.google.com%2Fshare%2F5cd8d32fee6e?w=800",
+    addedAt: new Date("2026-01-31T05:37:07.574Z")
+  },
   {
     id: "1769763462349",
     name: "인생관리",
@@ -35,17 +43,23 @@ const INITIAL_PROJECTS: Project[] = [
 ];
 
 /**
- * 기본 카테고리 리스트 (관리자 모드에서 추출된 데이터 반영)
+ * 기본 카테고리 리스트
  */
-const INITIAL_CATEGORIES = ["업무생산성"];
+const INITIAL_CATEGORIES = [
+  "업무생산성",
+  "디자인",
+  "바이브코딩",
+  "PPT문서작성",
+  "동영상",
+  "프롬프트"
+];
 
 const STORAGE_KEYS = {
-  PROJECTS: 'gallery_projects_v1.2',
-  CATEGORIES: 'gallery_categories_v1.2',
+  PROJECTS: 'gallery_projects_v1.3',
+  CATEGORIES: 'gallery_categories_v1.3',
 };
 
 const App: React.FC = () => {
-  // 로컬 스토리지 데이터 로드 (없을 경우 INITIAL 값 사용)
   const [projects, setProjects] = useState<Project[]>(() => {
     const saved = localStorage.getItem(STORAGE_KEYS.PROJECTS);
     if (saved) {
@@ -81,7 +95,9 @@ const App: React.FC = () => {
   const [editTarget, setEditTarget] = useState<Project | null>(null);
   const [showExportModal, setShowExportModal] = useState(false);
 
-  // 데이터 변경 시 로컬 스토리지에 자동 저장
+  // 드래그 앤 드롭 상태 관리
+  const [draggedItemIndex, setDraggedItemIndex] = useState<number | null>(null);
+
   useEffect(() => {
     localStorage.setItem(STORAGE_KEYS.PROJECTS, JSON.stringify(projects));
   }, [projects]);
@@ -171,6 +187,39 @@ const App: React.FC = () => {
     }
   };
 
+  /**
+   * 프로젝트 드래그 앤 드롭 정렬 로직
+   */
+  const handleDragStart = (index: number) => {
+    if (!isAdmin) return;
+    setDraggedItemIndex(index);
+  };
+
+  const handleDragEnter = (targetIndex: number) => {
+    if (!isAdmin || draggedItemIndex === null || draggedItemIndex === targetIndex) return;
+    
+    // 전체 리스트에서의 인덱스를 정확히 맞추기 위해 필터링 되지 않은 전체 프로젝트 리스트를 기준으로 정렬해야 함
+    // 여기서는 화면에 보이는 순서대로 정렬하도록 구현 (필터링 상태일 때는 필터링된 범위 내에서만 정렬)
+    const newProjects = [...projects];
+    
+    // 필터링된 리스트의 아이템이 실제 리스트의 어디에 있는지 찾음
+    const itemToMove = filteredProjects[draggedItemIndex];
+    const targetItem = filteredProjects[targetIndex];
+    
+    const actualFromIndex = projects.findIndex(p => p.id === itemToMove.id);
+    const actualToIndex = projects.findIndex(p => p.id === targetItem.id);
+    
+    newProjects.splice(actualFromIndex, 1);
+    newProjects.splice(actualToIndex, 0, itemToMove);
+    
+    setProjects(newProjects);
+    setDraggedItemIndex(targetIndex);
+  };
+
+  const handleDragEnd = () => {
+    setDraggedItemIndex(null);
+  };
+
   const toggleEditCategory = (cat: string) => {
     if (!editTarget) return;
     const newCats = editTarget.categories.includes(cat)
@@ -180,16 +229,13 @@ const App: React.FC = () => {
   };
 
   const exportData = () => {
-    const data = {
-      projects,
-      categories
-    };
+    const data = { projects, categories };
     return JSON.stringify(data, null, 2);
   };
 
   const copyToClipboard = () => {
     navigator.clipboard.writeText(exportData());
-    alert('데이터가 클립보드에 복사되었습니다! 이 내용을 채팅창에 붙여넣어 저에게 전달해 주세요.');
+    alert('데이터가 클립보드에 복사되었습니다!');
   };
 
   return (
@@ -218,7 +264,7 @@ const App: React.FC = () => {
                 )}
               </div>
               <p className="text-gray-600 text-xl font-medium max-w-2xl leading-relaxed">
-                {isAdmin ? '프로젝트를 관리하고 "데이터 내보내기" 버튼을 통해 배포 업데이트를 요청하세요.' : '웹 애플리케이션 개발 프로젝트를 한눈에 볼 수 있는 갤러리 대시보드입니다.'}
+                {isAdmin ? '프로젝트를 드래그하여 순서를 변경하거나 관리할 수 있습니다.' : '웹 애플리케이션 개발 프로젝트를 한눈에 볼 수 있는 갤러리 대시보드입니다.'}
               </p>
             </div>
             
@@ -256,13 +302,18 @@ const App: React.FC = () => {
             <div className="flex-1 w-full order-2 lg:order-1">
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
                 {filteredProjects.length > 0 ? (
-                  filteredProjects.map((project) => (
+                  filteredProjects.map((project, index) => (
                     <ProjectCard 
                       key={project.id} 
                       project={project} 
+                      index={index}
                       isAdmin={isAdmin}
+                      isDragging={draggedItemIndex === index}
                       onDelete={handleDeleteRequest}
                       onEdit={() => setEditTarget(project)}
+                      onDragStart={() => handleDragStart(index)}
+                      onDragEnter={() => handleDragEnter(index)}
+                      onDragEnd={handleDragEnd}
                       allCategories={categories}
                     />
                   ))
