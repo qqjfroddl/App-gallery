@@ -15,15 +15,24 @@ export const getCategoryStyles = (categories: string[], categoryName: string) =>
     { active: 'bg-orange-600', border: 'border-orange-500/30', text: 'text-orange-400', badge: 'bg-orange-600/80', shadow: 'shadow-orange-600/40' },
     { active: 'bg-rose-600', border: 'border-rose-500/30', text: 'text-rose-400', badge: 'bg-rose-600/80', shadow: 'shadow-rose-600/40' },
     { active: 'bg-indigo-600', border: 'border-indigo-500/30', text: 'text-indigo-400', badge: 'bg-indigo-600/80', shadow: 'shadow-indigo-600/40' },
+    { active: 'bg-cyan-600', border: 'border-cyan-500/30', text: 'text-cyan-400', badge: 'bg-cyan-600/80', shadow: 'shadow-cyan-600/40' },
   ];
   if (index === -1) return themes[0];
   return themes[index % themes.length];
 };
 
 /**
- * 기본 프로젝트 데이터 (제공된 최신 24개 데이터)
+ * 기본 프로젝트 데이터 (제공된 최신 25개 데이터)
  */
 const INITIAL_PROJECTS: Project[] = [
+  {
+    id: "1770276327317",
+    name: "대시보드_소방서 화재진압현황",
+    url: "https://gemini.google.com/share/79fd25008c89",
+    categories: ["업무생산성", "대시보드"],
+    imageUrl: "https://s0.wp.com/mshots/v1/https%3A%2F%2Fgemini.google.com%2Fshare%2F79fd25008c89?w=800",
+    addedAt: new Date("2026-02-05T07:25:27.317Z")
+  },
   {
     id: "1769763462349",
     name: "인생관리",
@@ -219,7 +228,7 @@ const INITIAL_PROJECTS: Project[] = [
 ];
 
 /**
- * 기본 카테고리 리스트 (제공된 8개 목록)
+ * 기본 카테고리 리스트 (9개 항목)
  */
 const INITIAL_CATEGORIES = [
   "업무생산성",
@@ -229,12 +238,13 @@ const INITIAL_CATEGORIES = [
   "동영상",
   "프롬프트",
   "게임",
-  "기타"
+  "기타",
+  "대시보드"
 ];
 
 const STORAGE_KEYS = {
-  PROJECTS: 'gallery_projects_v1.6',
-  CATEGORIES: 'gallery_categories_v1.6',
+  PROJECTS: 'gallery_projects_v1.7',
+  CATEGORIES: 'gallery_categories_v1.7',
 };
 
 const App: React.FC = () => {
