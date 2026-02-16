@@ -5,7 +5,7 @@ import Header from './components/Header';
 import Sidebar from './components/Sidebar';
 import ProjectCard from './components/ProjectCard';
 
-// 카테고리별 색상 테마 정의
+// 카테고리별 색상 테마 정의 (블루, 퍼플 등을 기본으로 사용)
 export const getCategoryStyles = (categories: string[], categoryName: string) => {
   const index = categories.indexOf(categoryName);
   const themes = [
@@ -22,9 +22,33 @@ export const getCategoryStyles = (categories: string[], categoryName: string) =>
 };
 
 /**
- * 기본 프로젝트 데이터 (제공된 최신 25개 데이터)
+ * 기본 프로젝트 데이터 (제공된 최신 28개 데이터셋)
  */
 const INITIAL_PROJECTS: Project[] = [
+  {
+    id: "1771203747057",
+    name: "노트북LM 슬라이드 편집기",
+    url: "https://notebooklm.referencehrd.com",
+    categories: ["업무생산성", "PPT문서작성"],
+    imageUrl: "https://s0.wp.com/mshots/v1/https%3A%2F%2Fnotebooklm.referencehrd.com?w=800",
+    addedAt: new Date("2026-02-16T01:02:27.057Z")
+  },
+  {
+    id: "1771117846479",
+    name: "노트북LM 슬라이드 텍스트수정",
+    url: "https://ai.studio/apps/drive/1kN24k1VN8ztcIQf3k8yD1v0NpgQUSu3Z?fullscreenApplet=true",
+    categories: ["업무생산성", "PPT문서작성"],
+    imageUrl: "https://s0.wp.com/mshots/v1/https%3A%2F%2Fai.studio%2Fapps%2Fdrive%2F1kN24k1VN8ztcIQf3k8yD1v0NpgQUSu3Z%3FfullscreenApplet%3Dtrue?w=800",
+    addedAt: new Date("2026-02-15T01:10:46.479Z")
+  },
+  {
+    id: "1771117727277",
+    name: "PDF/이미지 올리면 자동 자막+나레이션",
+    url: "https://ai.studio/apps/drive/1P1at0V2g-4YIK7oEI2vl1J5jCiZeU8Ay?fullscreenApplet=true",
+    categories: ["업무생산성", "바이브코딩", "동영상"],
+    imageUrl: "https://s0.wp.com/mshots/v1/https%3A%2F%2Fai.studio%2Fapps%2Fdrive%2F1P1at0V2g-4YIK7oEI2vl1J5jCiZeU8Ay%3FfullscreenApplet%3Dtrue?w=800",
+    addedAt: new Date("2026-02-15T01:08:47.277Z")
+  },
   {
     id: "1770276327317",
     name: "대시보드_소방서 화재진압현황",
@@ -242,9 +266,10 @@ const INITIAL_CATEGORIES = [
   "대시보드"
 ];
 
+// 저장소 버전 업데이트 (v1.8 -> v1.9)
 const STORAGE_KEYS = {
-  PROJECTS: 'gallery_projects_v1.7',
-  CATEGORIES: 'gallery_categories_v1.7',
+  PROJECTS: 'gallery_projects_v1.9',
+  CATEGORIES: 'gallery_categories_v1.9',
 };
 
 const App: React.FC = () => {
@@ -253,6 +278,7 @@ const App: React.FC = () => {
     if (saved) {
       try {
         const parsed = JSON.parse(saved);
+        // 날짜 문자열을 Date 객체로 복원
         return parsed.map((p: any) => ({ ...p, addedAt: new Date(p.addedAt) }));
       } catch (e) {
         return INITIAL_PROJECTS;
@@ -286,14 +312,17 @@ const App: React.FC = () => {
   // 드래그 앤 드롭 상태 관리
   const [draggedItemIndex, setDraggedItemIndex] = useState<number | null>(null);
 
+  // 프로젝트 데이터 변경 시 로컬 저장소 업데이트
   useEffect(() => {
     localStorage.setItem(STORAGE_KEYS.PROJECTS, JSON.stringify(projects));
   }, [projects]);
 
+  // 카테고리 데이터 변경 시 로컬 저장소 업데이트
   useEffect(() => {
     localStorage.setItem(STORAGE_KEYS.CATEGORIES, JSON.stringify(categories));
   }, [categories]);
 
+  // 관리자 인증 처리 (비밀번호: 2026)
   const handleAdminAuth = () => {
     if (passwordInput === '2026') {
       setIsAdmin(true);
@@ -304,6 +333,7 @@ const App: React.FC = () => {
     }
   };
 
+  // 검색 및 카테고리 필터링된 프로젝트 목록
   const filteredProjects = useMemo(() => {
     return projects.filter((project) => {
       const matchesCategory = activeCategory === DEFAULT_CATEGORIES.ALL || project.categories.includes(activeCategory);
@@ -313,6 +343,7 @@ const App: React.FC = () => {
     });
   }, [projects, activeCategory, searchQuery]);
 
+  // 프로젝트 추가 핸들러
   const handleAddProject = useCallback((name: string, url: string, selectedCategories: string[]) => {
     const formattedUrl = url.startsWith('http') ? url : `https://${url}`;
     const screenshotUrl = `https://s0.wp.com/mshots/v1/${encodeURIComponent(formattedUrl)}?w=800`;
@@ -328,6 +359,7 @@ const App: React.FC = () => {
     setProjects((prev) => [newProject, ...prev]);
   }, []);
 
+  // 프로젝트 정보 업데이트 핸들러
   const handleUpdateProject = (updatedProject: Project) => {
     setProjects((prev) => 
       prev.map((p) => (p.id === updatedProject.id ? {
@@ -340,10 +372,12 @@ const App: React.FC = () => {
     setEditTarget(null);
   };
 
+  // 프로젝트 삭제 요청 처리
   const handleDeleteRequest = useCallback((id: string) => {
     setDeleteTargetId(id);
   }, []);
 
+  // 삭제 최종 확인
   const confirmDelete = () => {
     if (deleteTargetId) {
       setProjects((prev) => prev.filter(p => p.id !== deleteTargetId));
@@ -351,12 +385,14 @@ const App: React.FC = () => {
     }
   };
 
+  // 카테고리 추가
   const handleAddCategory = useCallback((name: string) => {
     if (!categories.includes(name)) {
       setCategories((prev) => [...prev, name]);
     }
   }, [categories]);
 
+  // 카테고리 삭제 (해당 카테고리를 가진 프로젝트에서도 제거됨)
   const handleDeleteCategory = useCallback((name: string) => {
     setProjects(prev => prev.map(p => ({
       ...p,
@@ -366,6 +402,7 @@ const App: React.FC = () => {
     if (activeCategory === name) setActiveCategory(DEFAULT_CATEGORIES.ALL);
   }, [activeCategory]);
 
+  // 모든 데이터를 기본값으로 초기화
   const handleResetData = () => {
     if (confirm('모든 데이터를 초기값으로 되돌리시겠습니까? 직접 추가한 모든 정보가 삭제됩니다.')) {
       setProjects(INITIAL_PROJECTS);
@@ -376,7 +413,7 @@ const App: React.FC = () => {
   };
 
   /**
-   * 프로젝트 드래그 앤 드롭 정렬 로직
+   * 프로젝트 드래그 앤 드롭 정렬 로직 (관리자 모드 전용)
    */
   const handleDragStart = (index: number) => {
     if (!isAdmin) return;
@@ -404,6 +441,7 @@ const App: React.FC = () => {
     setDraggedItemIndex(null);
   };
 
+  // 수정 중인 프로젝트의 카테고리 토글
   const toggleEditCategory = (cat: string) => {
     if (!editTarget) return;
     const newCats = editTarget.categories.includes(cat)
@@ -412,11 +450,13 @@ const App: React.FC = () => {
     setEditTarget({ ...editTarget, categories: newCats });
   };
 
+  // 데이터 내보내기용 JSON 생성
   const exportData = () => {
     const data = { projects, categories };
     return JSON.stringify(data, null, 2);
   };
 
+  // 내보내기 데이터 클립보드 복사
   const copyToClipboard = () => {
     navigator.clipboard.writeText(exportData());
     alert('데이터가 클립보드에 복사되었습니다!');
@@ -424,18 +464,19 @@ const App: React.FC = () => {
 
   return (
     <div className="min-h-screen flex flex-col font-sans bg-[#050505] text-white selection:bg-point-blue/30 selection:text-white">
+      {/* 상단 헤더 컴포넌트 */}
       <Header 
         onSearch={setSearchQuery} 
         onSettingsClick={() => isAdmin ? setIsAdmin(false) : setShowAdminModal(true)}
         isAdmin={isAdmin}
       />
 
+      {/* 메인 콘텐츠 영역 */}
       <main className="flex-1 max-w-[1920px] mx-auto w-full px-6 py-12">
         <div className="flex flex-col gap-14">
           
-          {/* 상단 섹션: 제목, 설명 및 줄바꿈되는 카테고리 필터 */}
+          {/* 상단 필터 및 제목 섹션 */}
           <div className="border-b border-white/5 pb-10 space-y-10">
-            {/* 제목 및 설명 영역 */}
             <div className="space-y-4">
               <div className="flex items-center gap-5">
                 <h2 className="text-6xl font-black tracking-tighter italic">GALLERY</h2>
@@ -454,7 +495,7 @@ const App: React.FC = () => {
               </p>
             </div>
             
-            {/* 카테고리 필터 영역: flex-wrap 적용으로 자동 줄바꿈 */}
+            {/* 카테고리 필터 (줄바꿈 대응) */}
             <div className="flex flex-wrap gap-2.5">
               <button
                 onClick={() => setActiveCategory(DEFAULT_CATEGORIES.ALL)}
@@ -486,6 +527,7 @@ const App: React.FC = () => {
           </div>
 
           <div className="flex flex-col lg:flex-row gap-10 items-start">
+            {/* 프로젝트 갤러리 그리드 */}
             <div className="flex-1 w-full order-2 lg:order-1">
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
                 {filteredProjects.length > 0 ? (
@@ -512,6 +554,7 @@ const App: React.FC = () => {
               </div>
             </div>
 
+            {/* 관리자 사이드바 (추가/관리 도구) */}
             {isAdmin && (
               <div className="w-full lg:w-[420px] shrink-0 order-1 lg:order-2 animate-in slide-in-from-right duration-700">
                 <Sidebar 
@@ -529,12 +572,12 @@ const App: React.FC = () => {
         </div>
       </main>
 
-      {/* 내보내기 모달 */}
+      {/* 데이터 내보내기 모달 */}
       {showExportModal && (
         <div className="fixed inset-0 z-[200] flex items-center justify-center p-4 bg-black/95 backdrop-blur-2xl">
           <div className="glass rounded-[40px] w-full max-w-2xl p-10 border border-white/10 animate-in fade-in zoom-in duration-300">
             <h3 className="text-3xl font-black text-white mb-4 tracking-tighter uppercase italic">데이터 내보내기</h3>
-            <p className="text-gray-500 text-sm mb-8">아래 JSON 텍스트를 복사하여 저에게 전달해 주세요. 소스 코드의 기본값으로 업데이트해 드립니다.</p>
+            <p className="text-gray-500 text-sm mb-8">아래 JSON 텍스트를 복사하여 관리용으로 보관하거나 초기 데이터로 활용하세요.</p>
             <textarea 
               readOnly
               value={exportData()}
@@ -558,7 +601,7 @@ const App: React.FC = () => {
         </div>
       )}
 
-      {/* 수정 모달 */}
+      {/* 프로젝트 정보 수정 모달 */}
       {editTarget && (
         <div className="fixed inset-0 z-[200] flex items-center justify-center p-4 bg-black/90 backdrop-blur-xl">
           <div className="glass rounded-[40px] w-full max-w-md p-10 border border-point-blue/20 shadow-[0_0_100px_rgba(59,130,246,0.1)] animate-in fade-in zoom-in duration-300">
@@ -628,7 +671,7 @@ const App: React.FC = () => {
         </div>
       )}
 
-      {/* 삭제 확인 모달 */}
+      {/* 프로젝트 삭제 확인 모달 */}
       {deleteTargetId && (
         <div className="fixed inset-0 z-[200] flex items-center justify-center p-4 bg-black/90 backdrop-blur-xl">
           <div className="glass rounded-[40px] w-full max-w-sm p-12 border border-red-500/20 shadow-[0_0_100px_rgba(239,68,68,0.1)] animate-in fade-in zoom-in duration-300">
@@ -657,7 +700,7 @@ const App: React.FC = () => {
         </div>
       )}
 
-      {/* 관리자 인증 모달 */}
+      {/* 관리자 암호 인증 모달 */}
       {showAdminModal && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/95 backdrop-blur-2xl">
           <div className="glass rounded-[50px] w-full max-w-md p-14 border border-white/10 shadow-[0_0_150px_rgba(59,130,246,0.1)] animate-in fade-in zoom-in duration-500">
@@ -695,6 +738,7 @@ const App: React.FC = () => {
         </div>
       )}
 
+      {/* 푸터 영역 */}
       <footer className="max-w-[1920px] mx-auto px-6 py-20 border-t border-white/5 mt-32 w-full">
         <div className="flex justify-center items-center text-gray-700 text-xs font-bold tracking-widest">
           <p className="tracking-tighter opacity-50 uppercase text-center">&copy; 2026 Deeptactlearning. All Rights Reserved.</p>
