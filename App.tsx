@@ -22,9 +22,17 @@ export const getCategoryStyles = (categories: string[], categoryName: string) =>
 };
 
 /**
- * 기본 프로젝트 데이터 (제공된 최신 28개 데이터셋)
+ * 기본 프로젝트 데이터 (제공된 최신 29개 데이터셋)
  */
 const INITIAL_PROJECTS: Project[] = [
+  {
+    id: "1771248047193",
+    name: "노트북LM 슬라이드 프롬프트",
+    url: "https://claude.ai/public/artifacts/a612f6c9-f0e3-48f5-aa85-ba91a8f5fe49",
+    categories: ["업무생산성", "프롬프트", "PPT문서작성"],
+    imageUrl: "https://s0.wp.com/mshots/v1/https%3A%2F%2Fclaude.ai%2Fpublic%2Fartifacts%2Fa612f6c9-f0e3-48f5-aa85-ba91a8f5fe49?w=800",
+    addedAt: new Date("2026-02-16T13:20:47.193Z")
+  },
   {
     id: "1771203747057",
     name: "노트북LM 슬라이드 편집기",
@@ -266,10 +274,10 @@ const INITIAL_CATEGORIES = [
   "대시보드"
 ];
 
-// 저장소 버전 업데이트 (v1.8 -> v1.9)
+// 저장소 버전 업데이트 (v1.9 -> v2.0)
 const STORAGE_KEYS = {
-  PROJECTS: 'gallery_projects_v1.9',
-  CATEGORIES: 'gallery_categories_v1.9',
+  PROJECTS: 'gallery_projects_v2.0',
+  CATEGORIES: 'gallery_categories_v2.0',
 };
 
 const App: React.FC = () => {
