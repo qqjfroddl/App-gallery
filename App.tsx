@@ -22,9 +22,33 @@ export const getCategoryStyles = (categories: string[], categoryName: string) =>
 };
 
 /**
- * 기본 프로젝트 데이터 (제공된 최신 29개 데이터셋)
+ * 기본 프로젝트 데이터 (제공된 최신 32개 데이터셋)
  */
 const INITIAL_PROJECTS: Project[] = [
+  {
+    id: "1773317028292",
+    name: "스마트전광판",
+    url: "https://smart-led-signboard.vercel.app/",
+    categories: ["기타", "게임"],
+    imageUrl: "https://s0.wp.com/mshots/v1/https%3A%2F%2Fsmart-led-signboard.vercel.app%2F?w=800",
+    addedAt: new Date("2026-03-12T12:03:48.292Z")
+  },
+  {
+    id: "1771937588274",
+    name: "노트북LM PDF to PPT 생성기",
+    url: "https://lm-pdf-to-ppt-learning-management-851830077252.us-west1.run.app",
+    categories: ["업무생산성", "PPT문서작성", "바이브코딩"],
+    imageUrl: "https://s0.wp.com/mshots/v1/https%3A%2F%2Flm-pdf-to-ppt-learning-management-851830077252.us-west1.run.app?w=800",
+    addedAt: new Date("2026-02-24T12:53:08.274Z")
+  },
+  {
+    id: "1771937570401",
+    name: "노트북LM 프롬프트 생성기",
+    url: "https://lm-246-learing-management-851830077252.us-west1.run.app",
+    categories: ["업무생산성", "바이브코딩", "프롬프트"],
+    imageUrl: "https://s0.wp.com/mshots/v1/https%3A%2F%2Flm-246-learing-management-851830077252.us-west1.run.app?w=800",
+    addedAt: new Date("2026-02-24T12:52:50.401Z")
+  },
   {
     id: "1771248047193",
     name: "노트북LM 슬라이드 프롬프트",
@@ -274,10 +298,10 @@ const INITIAL_CATEGORIES = [
   "대시보드"
 ];
 
-// 저장소 버전 업데이트 (v1.9 -> v2.0)
+// 저장소 버전 업데이트 (v2.1 -> v2.2)
 const STORAGE_KEYS = {
-  PROJECTS: 'gallery_projects_v2.0',
-  CATEGORIES: 'gallery_categories_v2.0',
+  PROJECTS: 'gallery_projects_v2.2',
+  CATEGORIES: 'gallery_categories_v2.2',
 };
 
 const App: React.FC = () => {
